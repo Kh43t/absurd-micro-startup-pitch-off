@@ -14,15 +14,21 @@ const OUT_FILE = `${OUT_DIR}/entry.txt`;
 
 // The gate allows 1-200 characters of UTF-8, not whitespace only, and the
 // entry must be exactly one sentence — refuse to write anything else.
+const MAX_CHARS = 200;
+
+function countSentences(text: string): number {
+  return (text.match(/\./g) ?? []).length;
+}
+
 function oneSentence(text: string): string {
   const chars = [...text].length;
-  if (chars < 1 || chars > 200) {
+  if (chars < 1 || chars > MAX_CHARS) {
     throw new Error(`pitch must be 1-200 characters, got ${chars}`);
   }
   if (text.trim().length === 0) {
     throw new Error("pitch must not be whitespace only");
   }
-  if ((text.match(/\./g) ?? []).length !== 1 || !text.endsWith(".")) {
+  if (countSentences(text) !== 1 || !text.endsWith(".")) {
     throw new Error("pitch must be exactly one sentence");
   }
   return text;
